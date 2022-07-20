@@ -7,14 +7,15 @@ import {
   useMapEvent,
 } from "react-leaflet";
 
-function DynamicMarker({ geoLocation, setGeoLocation }) {
-  console.log("DynamicMarker");
+function DynamicMarker({ city, setCity, geoLocation, setGeoLocation }) {
   useMapEvent("click", (e) => {
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${e.latlng.lat}&lon=${e.latlng.lng}&appid=${process.env.REACT_APP_APIKEY}`
     )
       .then((res) => res.json())
       .then((res) => {
+        // console.log(res.name);
+        setCity(res.name);
         const newGeoLoc = res.coord;
         setGeoLocation({ lat: newGeoLoc.lat, lng: newGeoLoc.lon });
       });
@@ -27,12 +28,7 @@ function DynamicMarker({ geoLocation, setGeoLocation }) {
     </Marker>
   );
 }
-function Map() {
-  const [geoLocation, setGeoLocation] = useState({
-    lat: 19.08333,
-    lng: 72.83333,
-  });
-
+function Map({ city, setCity, geoLocation, setGeoLocation }) {
   return (
     <section className="leaflet-container">
       <MapContainer center={geoLocation} zoom={13}>
@@ -46,6 +42,8 @@ function Map() {
           </Popup>
         </Marker> */}
         <DynamicMarker
+          city={city}
+          setCity={setCity}
           geoLocation={geoLocation}
           setGeoLocation={setGeoLocation}
         />

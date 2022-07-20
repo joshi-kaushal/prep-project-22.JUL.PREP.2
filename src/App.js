@@ -7,6 +7,10 @@ function App() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [city, setCity] = useState("New York City");
+  const [geoLocation, setGeoLocation] = useState({
+    lat: 19.08333,
+    lng: 72.83333,
+  });
   const [results, setResults] = useState(null);
 
   useEffect(() => {
@@ -47,10 +51,15 @@ function App() {
             value={city}
             onChange={(event) => setCity(event.target.value)}
           />
-          <Map />
+          <Map
+            city={city}
+            setCity={setCity}
+            geoLocation={geoLocation}
+            setGeoLocation={setGeoLocation}
+          />
           <div className="Results">
             {!isLoaded && <h2>Loading...</h2>}
-            {console.log(results)}
+            {/* {console.log(results)} */}
             {isLoaded && results && (
               <>
                 <h3>{results.weather[0].main}</h3>
