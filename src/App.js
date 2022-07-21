@@ -1,26 +1,28 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Map from "./Components/Map";
+
+import Map from "./Components/Map/Map";
+import useGetLocation from "./hooks/useGetLocation";
 import logo from "./mlh-prep.png";
 
 function App() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [city, setCity] = useState("New York City");
-  const [geoLocation, setGeoLocation] = useState({
+  // const [city, setCity] = useState("your city");
+  // const [geoLocation, setGeoLocation] = useState({
+  //   lat: 19.08333,
+  //   lng: 72.83333,
+  // });
+  const [results, setResults] = useState(null);
+
+  const [geoLocation, setGeoLocation, city, setCity] = useGetLocation("Agra", {
     lat: 19.08333,
     lng: 72.83333,
   });
-  const [results, setResults] = useState(null);
 
   useEffect(() => {
-    fetch(
-      "https://api.openweathermap.org/data/2.5/weather?q=" +
-        city +
-        "&units=metric" +
-        "&appid=" +
-        process.env.REACT_APP_APIKEY
-    )
+    const URL = `https://api.openweathermap.org/data/2.5/weather?lat=${geoLocation.lat}&lon=${geoLocation.lng}&appid=${process.env.REACT_APP_APIKEY}`;
+    fetch(URL)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -49,6 +51,7 @@ function App() {
           <input
             type="text"
             value={city}
+            placeholder="Enter a city"
             onChange={(event) => setCity(event.target.value)}
           />
           <Map
